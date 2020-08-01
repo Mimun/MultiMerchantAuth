@@ -6,11 +6,11 @@ const crypto = require('crypto')
 const path = require('path')
 const fs = require('fs')
 
-const request = require('request')
+const request = require('request');
+const { response } = require('express');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
-const crypto = require('crypto');
 const algorithm = 'aes-192-cbc';
 const password = 'Password used to generate key and has been added more characters to get more real power';
 // Use the async `crypto.scrypt()` instead.
@@ -66,7 +66,7 @@ router.post('/login', function (req, res, next) {
 
   };
 
-  request('https://localhost:3000/login', options, (err, res, body) => {
+  request('https://localhost:3000/login', options, (err, resp, body) => {
     if (err) {
       return console.log(err);
     }
@@ -80,14 +80,16 @@ router.post('/login', function (req, res, next) {
 
     encrypted_JWT_0 += cipher.final('hex');
 
-    // console.log("Extra JWT 0: ", extra_JWT_0, '\n', 'length:', extra_JWT_0.length);
+    console.log("Extra JWT 0: ", encrypted_JWT_0, '\n', 'length:', encrypted_JWT_0.length);
     // 4. Appending Merchant ID to Encrypted JWT-0 to make Extra-Encrypted JWT-0
     EE_JWT0 = {
-      encrypted_JWT_0: encrypted_JWT_0,
+      accessToken: encrypted_JWT_0,
       merchantID: merchantID
-    }    
+    }
     // 5. Encrypt Extra-Encrypted JWT-0 by Merchant Public Key to get JWT-1
-    
+    // Need to adding function to find the PublicKey of Merchant in Folder base on MerchantID
+
+    res.send(EE_JWT0)
 
   })
 
@@ -126,3 +128,9 @@ function RSA_PublicKey_Encrypt(toEncrypt, relativeOrAbsolutePathToPublicKey) {
 // console.log('dec', dec)
 
 module.exports = router;
+
+
+
+
+
+
