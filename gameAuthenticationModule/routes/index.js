@@ -88,8 +88,11 @@ router.post('/login', function (req, res, next) {
     }
     // 5. Encrypt Extra-Encrypted JWT-0 by Merchant Public Key to get JWT-1
     // Need to adding function to find the PublicKey of Merchant in Folder base on MerchantID
+    var path_to_PublicKey = './GamePublicKeys/GamePub_1.pem'
+    let JWT_1 = RSA_PublicKey_Encrypt(JSON.stringify(EE_JWT0), path_to_PublicKey)
+      
 
-    res.send(EE_JWT0)
+    res.send(JWT_1)
 
   })
 
