@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+global.atob = require("atob");
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
 const crypto = require('crypto')
@@ -59,8 +61,8 @@ router.post('/login', function (req, res, next) {
     },
     // form or body are both ukie
     form: {
-      username: "chipl",
-      password: "123456"
+      username: username,
+      password: password
     },
     json: true
 
@@ -73,6 +75,12 @@ router.post('/login', function (req, res, next) {
     console.log(body);
     // console.log(body.explanation);
     JWT_0 = body['accessToken']
+
+    if (!JWT_0) {
+      console.log('Invalid username and password')
+      res.send('Invalid username and password')
+      return;
+    }
     // 3. Encrypt JWT-0 by AES System Key 
     const cipher = crypto.createCipheriv(algorithm, key, iv);
 
@@ -90,12 +98,52 @@ router.post('/login', function (req, res, next) {
     // Need to adding function to find the PublicKey of Merchant in Folder base on MerchantID
     var path_to_PublicKey = './GamePublicKeys/GamePub_1.pem'
     let JWT_1 = RSA_PublicKey_Encrypt(JSON.stringify(EE_JWT0), path_to_PublicKey)
-      
+
 
     res.send(JWT_1)
 
   })
 
+})
+
+router.post('/verify_eejwt0', function (req, res, next) {
+  let eejwt0 = req.body["accessToken"];
+
+  console.log('eejwt0', eejwt0)
+  let decipher = crypto.createDecipheriv('aes-192-cbc', key, iv);
+  let JWT_0 = decipher.update(eejwt0, 'hex', 'utf8');
+  console.log('jwt_0', JWT_0)
+
+  const options = {
+    url: 'https://localhost:3000/verify',
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'User-Agent': 'my-reddit-client'
+    },
+    // form or body are both ukie
+    form: {
+      accessToken: JWT_0
+    },
+    json: true
+  };
+
+  request('https://localhost:3000/verify', options, (err, resp, body) => {
+    if (err) {
+      return console.log(err);
+      res.sendStatus(400)
+    }
+    res.send(body)
+    console.log('return body', body)
+  })
+  // Reading JWT_0
+
+
+  // let jwt = parseJwt(JWT_0)
+
+
+  // res.send(jwt)
 })
 
 // Helper functions
@@ -108,6 +156,15 @@ function RSA_PublicKey_Encrypt(toEncrypt, relativeOrAbsolutePathToPublicKey) {
   return encrypted.toString('base64')
 }
 
+function parseJwt(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+};
 
 // This function will be used in Game Provider
 // function RSA_PrivateKey_Decrypt(toDecrypt, relativeOrAbsolutePathtoPrivateKey) {

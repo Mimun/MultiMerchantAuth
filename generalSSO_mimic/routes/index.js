@@ -119,6 +119,21 @@ router.post('/token', (req, res) => {
     });
 });
 
+router.post('/verify', (req,res,next)=>{
+    let token = req.body["accessToken"]
+    // console.log('from verify', jwt)
+    if (!jwt){
+        res.status(400).send('Bad request, non of access token')
+    }
+    jwt.verify(token, accessTokenSecret, (err, user) => {
+        if (err) {
+            return res.status(403).send(err);
+        }
+        return res.sendStatus(200)
+    })
+
+})
+
 router.post('/logout', (req, res) => {
     const { token } = req.body;
     refreshTokens = refreshTokens.filter(token => t !== token);
