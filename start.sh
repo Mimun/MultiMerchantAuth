@@ -1,0 +1,1 @@
+concurrently "npm start --prefix generalSSO_mimic/" "npm start --prefix gameAuthenticationModule/"

@@ -121,7 +121,7 @@ router.post('/token', (req, res) => {
 
 router.post('/verify', (req,res,next)=>{
     let token = req.body["accessToken"]
-    // console.log('from verify', jwt)
+    console.log('from verify 3000: ------------------', token, '\n')
     if (!jwt){
         res.status(400).send('Bad request, non of access token')
     }
@@ -129,7 +129,7 @@ router.post('/verify', (req,res,next)=>{
         if (err) {
             return res.status(403).send(err);
         }
-        return res.sendStatus(200)
+        return res.status(200).send('Confirm verification')
     })
 
 })
