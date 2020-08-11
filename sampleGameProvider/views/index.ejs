@@ -1,11 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1><%= title %></h1>
+  <p>Welcome to <%= title %></p>
+  <iframe src=http://localhost:3001/login style="
+    width: 500px;
+    height: 300px;
+    border: none;"></iframe>
+</body>
+<script>
+  window.addEventListener("message", receiveMessage, false);
+
+  function receiveMessage(evt) {
+    console.log(evt)
+    if (event.origin !== "http://localhost:3001"){
+      return;
+    }     
+
+    console.log("JWT1:", evt.data)
+
+    // ...
+  }
+</script>
+
 </html>

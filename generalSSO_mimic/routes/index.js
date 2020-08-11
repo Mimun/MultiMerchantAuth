@@ -111,7 +111,7 @@ router.post('/token', (req, res) => {
             return res.sendStatus(403);
         }
 
-        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
+        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20h' });
 
         res.json({
             accessToken
@@ -121,7 +121,7 @@ router.post('/token', (req, res) => {
 
 router.post('/verify', (req,res,next)=>{
     let token = req.body["accessToken"]
-    console.log('from verify 3000: ------------------', token, '\n')
+    // console.log('from verify 3000: ------------------', token, '\n')
     if (!jwt){
         res.status(400).send('Bad request, non of access token')
     }

@@ -52,8 +52,10 @@ router.post('/verify', function (req, res, next) {
 
 });
 
-router.get('/login', function (req, res, next) {
 
+router.get('/login',function(req,res,next){
+  res.render('dynamic', { title: 'Express' });
+  // res.render('index', { title: 'Express' });
 })
 
 router.post('/login', function (req, res, next) {
@@ -127,12 +129,11 @@ router.post('/login', function (req, res, next) {
 })
 
 router.post('/verify_eejwt0', function (req, res, next) {
+  console.log("req", req.body)
   let eejwt0 = req.body["accessToken"];
   // JWT_0 += decipher.final('hex');
-
+  console.log("eejwt0", eejwt0)
   let JWT_0 = decrypt(eejwt0)
-
-  console.log('jwt_0', JWT_0)
 
   const options = {
     url: 'https://localhost:3000/verify',
@@ -197,26 +198,6 @@ function parseJwt(token) {
 };
 
 
-// This function will be used in Game Provider
-// function RSA_PrivateKey_Decrypt(toDecrypt, relativeOrAbsolutePathtoPrivateKey) {
-//   const absolutePath = path.resolve(relativeOrAbsolutePathtoPrivateKey)
-//   const privateKey = fs.readFileSync(absolutePath, 'utf8')
-//   const buffer = Buffer.from(toDecrypt, 'base64')
-//   const decrypted = crypto.privateDecrypt(
-//     {
-//       key: privateKey.toString(),
-//       passphrase: 'this is some secret of system',
-//     },
-//     buffer,
-//   )
-//   return decrypted.toString('utf8')
-// }
-
-// const enc = encrypt("I need to encrypt a string using a public key (pem file), and then sign it using a private key (also a pem).", `public.pem`)
-// console.log('enc', enc)
-
-// const dec = decrypt(enc, `private.pem`)
-// console.log('dec', dec)
 
 module.exports = router;
 
