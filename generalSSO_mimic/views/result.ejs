@@ -6,24 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<script>
-    token = <%-token %>
-    console.log(token)
-    this.postMessage(token,"*")
 
-    window.addEventListener("message", receiveMessage, false);
-
-    function receiveMessage(evt) {
-        console.log(evt)
-        if (event.origin !== "localhost:3000")
-            return;
-
-        // ...
-    }
-</script>
 
 <body>
+    <script>
+        token = <%-token %>
+            console.log(token)
+        this.postMessage(token, "*")
 
+        window.addEventListener("message", receiveMessage, false);
+
+        function receiveMessage(evt) {
+            console.log(evt)
+            if (event.origin !== "localhost:3000")
+                return;
+
+            // ...
+        }
+    </script>
 </body>
 
 </html>

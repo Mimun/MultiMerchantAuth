@@ -2,44 +2,31 @@ var express = require('express');
 var router = express.Router();
 const url = require('url')
 const querystring = require('querystring')
+const fs = require('fs')
+// const path = require('path')
 
 /* GET home page. */
-router.get('/',function(req,res,next){
+router.get('/', function (req, res, next) {
     res.redirect('/login')
     // res.render('index', { title: 'Express' });
 })
 
-router.get('/test',function(req,res,next){
+router.get('/test', function (req, res, next) {
     res.render('dynamic', { title: 'Express' });
     // res.render('index', { title: 'Express' });
 })
 
 
 router.get('/login', function (req, res, next) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'SSO Mimicking' });
 });
 
 const jwt = require('jsonwebtoken');
 
 const accessTokenSecret = 'somerandomaccesstoken';
 const refreshTokenSecret = 'somerandomstringforrefreshtoken';
+const data_path = './routes/users.json'
 
-const users = [
-    {
-        username: 'chipl',
-        password: '123456',
-        role: 'admin'
-    },
-    {
-        username: 'john',
-        password: 'password123admin',
-        role: 'admin'
-    }, {
-        username: 'anna',
-        password: 'password123member',
-        role: 'member'
-    }
-]
 
 const refreshTokens = [];
 
@@ -51,6 +38,10 @@ router.post('/login', (req, res) => {
     // console.log(req.body, req.query,req.body && req.query )
     const { username, password } = req.body;
     console.log('REQUEST', username, password)
+
+
+    let rawdata = fs.readFileSync(data_path)
+    let users = JSON.parse(rawdata)
 
     // filter user from the users array by username and password
     const user = users.find(u => { return u.username === username && u.password === password });
@@ -86,14 +77,15 @@ router.post('/pagelogin', (req, res) => {
 
         refreshTokens.push(refreshToken);
 
-        res.render('result',{
-            token:JSON.stringify(accessToken),
-            refresh:JSON.stringify(refreshToken)
+        res.render('result', {
+            token: JSON.stringify(accessToken),
+            refresh: JSON.stringify(refreshToken)
         });
     } else {
         res.send('Username or password incorrect');
     }
 });
+
 
 router.post('/token', (req, res) => {
     const { token } = req.body;
@@ -119,10 +111,10 @@ router.post('/token', (req, res) => {
     });
 });
 
-router.post('/verify', (req,res,next)=>{
+router.post('/verify', (req, res, next) => {
     let token = req.body["accessToken"]
     // console.log('from verify 3000: ------------------', token, '\n')
-    if (!jwt){
+    if (!jwt) {
         res.status(400).send('Bad request, non of access token')
     }
     jwt.verify(token, accessTokenSecret, (err, user) => {
@@ -137,7 +129,6 @@ router.post('/verify', (req,res,next)=>{
 router.post('/logout', (req, res) => {
     const { token } = req.body;
     refreshTokens = refreshTokens.filter(token => t !== token);
-
     res.send("Logout successful");
 });
 

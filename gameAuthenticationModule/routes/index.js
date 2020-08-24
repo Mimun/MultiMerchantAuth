@@ -35,7 +35,7 @@ var decrypt = ((encrypted) => {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Authentication Module' });
 });
 
 router.post('/verify', function (req, res, next) {

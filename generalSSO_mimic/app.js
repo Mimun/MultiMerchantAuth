@@ -8,8 +8,12 @@ const bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var regRouter = require('./routes/registration')
 
 var app = express();
+
+app.use(bodyParser({limit: '50mb'}))
+app.use(express.json());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,11 +24,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'node_modules')));
+app.use(express.static(path.join(__dirname)));
+
+
+
+// app.use(bodyParser.json());
 
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/reg', regRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

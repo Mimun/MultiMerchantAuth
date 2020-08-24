@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Listing</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/mdbootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/mdb.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container">
+        <!--  -->
+        <%- include('./partials/userdetail')%>
+        <%- include('./partials/userdetail')%>
+        <%- include('./partials/userdetail')%>
+        <%- include('./partials/userdetail')%>
+
+        <%- include('./partials/userdetail')%>
+        <%- include('./partials/userdetail')%>
+        <%- include('./partials/userdetail')%>
+        <%- include('./partials/userdetail')%>
+        <!--  -->
+    </div>
+    <!-- libs scripts -->
+    <script src="/mdbootstrap/js/jquery.min.js"></script>
+    <script src="/mdbootstrap/js/popper.min.js"></script>
+    <script src="/mdbootstrap/js/bootstrap.min.js"></script>
+    <script src="/mdbootstrap/js/mdb.min.js"></script>
+    <script>
+        let users = <%- users %>
+            console.log('users:', users)
+    </script>
+</body>
+
+</html>
