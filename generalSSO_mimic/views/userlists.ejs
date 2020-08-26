@@ -15,27 +15,134 @@
 </head>
 
 <body>
-    <div class="container">
+    <template>
+        <%- include('./partials/userdetail')%>
+    </template>
+    <div class="container" id="container">
         <!--  -->
-        <%- include('./partials/userdetail')%>
-        <%- include('./partials/userdetail')%>
-        <%- include('./partials/userdetail')%>
-        <%- include('./partials/userdetail')%>
 
-        <%- include('./partials/userdetail')%>
-        <%- include('./partials/userdetail')%>
-        <%- include('./partials/userdetail')%>
-        <%- include('./partials/userdetail')%>
-        <!--  -->
     </div>
+    <!-- Modal -->
+    <!-- Button trigger modal -->
+    <!-- Modal -->
+    <!-- <modal> -->
+    <modal class="modal fade" id="userEditor" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+
+        <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit User Info</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <%- include("./partials/editform")  %>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveChangeBnt">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </modal>
+    <!-- </modal> -->
+
     <!-- libs scripts -->
     <script src="/mdbootstrap/js/jquery.min.js"></script>
     <script src="/mdbootstrap/js/popper.min.js"></script>
     <script src="/mdbootstrap/js/bootstrap.min.js"></script>
     <script src="/mdbootstrap/js/mdb.min.js"></script>
     <script>
-        let users = <%- users %>
-            console.log('users:', users)
+        let users = <%- users %>;
+        modal = document.querySelector('modal')
+        ////////////////////////////////////////////////////////
+
+        users.forEach(user => {
+            for (const [key, value] of Object.entries(user)) {
+                // console.log(`${key}: ${value}`);
+                tempContent = document.querySelector('template').content
+
+                if (tempContent.querySelector(`[comp-role="${key}"]`) && key !== "avatar") {
+                    tempContent.querySelector(`[comp-role="${key}"]`).innerHTML = value;
+                    // console.log(tempContent.querySelector(`[comp-role="${key}"]`))
+
+                }
+                if (key == 'avatar') {
+                    tempContent.querySelector(`[comp-role="avatar"]`).src = value
+                    // console.log(tempContent.querySelector(`[comp-role="avatar"]`))
+                }
+
+            }
+            // console.log(tempContent)
+
+
+            container.appendChild(document.importNode(tempContent, true));
+            lastElementChild = container.lastElementChild
+            lastElementChild.C_DATA = user
+            lastElementChild.setAttribute('c-data', true)
+            // console.log('lastElementChild', lastElementChild)
+
+            editBnt = lastElementChild.querySelector('[comp-id="btn-edit"]')
+
+
+            editBnt.addEventListener('click', (evt) => {
+                let handler = evt.target.closest('[c-data="true"]')
+                modal.handler = handler
+
+                let C_DATA = handler.C_DATA
+                console.log(C_DATA)
+                $("modal").modal("show");
+                modal.C_DATA = Object.assign({}, C_DATA)
+                for (const [key, value] of Object.entries(C_DATA)) {
+                    // console.log(modal.querySelector(`[c-type="${key}"]`))
+                    if (modal.querySelector(`[c-type="${key}"]`) && key !== "avatar") {
+                        modal.querySelector(`[c-type="${key}"]`).value = value;
+                    }
+                }
+
+            })
+        });
+        // 
+        ////////////////////////////////////////////////////////////////////////////////////////
+        //
+        let c_types = modal.querySelectorAll('[c-type]')
+        c_types.forEach(function (ele) {
+            ele.addEventListener('change', function (evt) {
+                // console.log(modal.handler, this.getAttribute('c-type'))
+                // Wait
+                modal.C_DATA[this.getAttribute('c-type')] = this.value;
+                console.log(modal.C_DATA)
+            })
+        })
+        // ///////////////////////////////////////
+        saveChangeBnt.addEventListener('click', evt => {
+            console.log('bnt ready')
+            let C_DATA = modal.C_DATA
+            modal.handler.C_DATA = Object.assign({},modal.C_DATA)
+            for (const [key, value] of Object.entries(C_DATA)) {
+                // console.log(`${key}: ${value}`);
+                tempContent = modal.handler
+
+                if (tempContent.querySelector(`[comp-role="${key}"]`) && key !== "avatar") {
+                    tempContent.querySelector(`[comp-role="${key}"]`).innerHTML = value;
+                    // console.log(tempContent.querySelector(`[comp-role="${key}"]`))
+
+                }
+                if (key == 'avatar') {
+                    tempContent.querySelector(`[comp-role="avatar"]`).src = value
+                    // console.log(tempContent.querySelector(`[comp-role="avatar"]`))
+                }
+
+            }
+
+            // post the chagging to server
+        })
+
     </script>
 </body>
 

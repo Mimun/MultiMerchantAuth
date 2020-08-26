@@ -1,0 +1,48 @@
+<!-- Default form register -->
+<main class="text-center border border-light p-5">
+    <cropper-wc title="abc"></cropper-wc>
+    <small id="image-selector" class="form-text text-muted mb-4">
+        Create a Avatar
+    </small>
+    <div class="form-row mb-4">
+        <div class="col">
+            <!-- First name -->
+            <input type="text" id="defaultRegisterFormFirstName" c-type="lastname" class="form-control"
+                placeholder="First name">
+        </div>
+        <div class="col">
+            <!-- Last name -->
+            <input type="text" id="defaultRegisterFormLastName" c-type="firstname" class="form-control"
+                placeholder="Last name">
+        </div>
+    </div>
+
+
+    <!-- E-mail -->
+    <input type="email" id="email" class="form-control mb-4" c-type="email" placeholder="E-mail">
+
+    <input type="text" id="nickname" class="form-control mb-4" c-type="username" placeholder="Nick name">
+
+    <input type="text" id="role" class="form-control mb-4" c-type="role" placeholder="Role">
+
+    <input type="number" id="balance" class="form-control mb-4" c-type="balance" placeholder="Balance">
+
+    <!-- Password -->
+    <input type="password" id="password" class="form-control" c-type="password" placeholder="Password"
+        aria-describedby="defaultRegisterFormPasswordHelpBlock">
+    <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
+        At least 8 characters and 1 digit
+    </small>
+
+    <!-- Phone number -->
+    <input type="text" id="phone" class="form-control" c-type="phone" placeholder="Phone number"
+        aria-describedby="defaultRegisterFormPhoneHelpBlock">
+    <small id="defaultRegisterFormPhoneHelpBlock" class="form-text text-muted mb-4">
+        Optional - for two step authentication
+    </small>
+
+
+</main>
+<script type="module" src="/Components/cropper/cropper.js"></script>
+
+<!-- Default form register -->
