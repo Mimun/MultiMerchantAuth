@@ -65,8 +65,11 @@ router.post('/login', (req, res) => {
 router.post('/pagelogin', (req, res) => {
     // read username and password from request body
     // console.log(req.body, req.query,req.body && req.query )
+
     const { username, password } = req.body;
 
+    let rawdata = fs.readFileSync(data_path)
+    let users = JSON.parse(rawdata)
     // filter user from the users array by username and password
     const user = users.find(u => { return u.username === username && u.password === password });
 
@@ -79,7 +82,8 @@ router.post('/pagelogin', (req, res) => {
 
         res.render('result', {
             token: JSON.stringify(accessToken),
-            refresh: JSON.stringify(refreshToken)
+            refresh: JSON.stringify(refreshToken),
+            user:user
         });
     } else {
         res.send('Username or password incorrect');
@@ -113,11 +117,12 @@ router.post('/token', (req, res) => {
 
 router.post('/verify', (req, res, next) => {
     let token = req.body["accessToken"]
-    // console.log('from verify 3000: ------------------', token, '\n')
-    if (!jwt) {
+    console.log('from verify 3000: ------------------', token, '\n')
+    if (!token) {
         res.status(400).send('Bad request, non of access token')
+        return;
     }
-    jwt.verify(token, accessTokenSecret, (err, user) => {
+    jwt.verify(token, accessTokenSecret, (err) => {
         if (err) {
             return res.status(403).send(err);
         }

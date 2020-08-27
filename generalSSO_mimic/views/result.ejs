@@ -7,8 +7,22 @@
     <title>Document</title>
 </head>
 
-
 <body>
+    <header>
+        <%= user.avatar%>
+        <br>
+        <%= user.lastname%>
+        <br>
+        <%= user.firstname%>
+        <br>
+        <%= user.email%>
+        <br>
+        <%= user.phone%>
+        <br>
+        <%= user.role%>
+        
+        
+    </header>
     <script>
         token = <%-token %>
             console.log(token)

@@ -19,14 +19,37 @@
 
   function receiveMessage(evt) {
     console.log(evt)
-    if (event.origin !== "http://localhost:3001"){
+    if (event.origin !== "http://localhost:3001") {
       return;
-    }     
-
+    }
     console.log("JWT1:", evt.data)
-
-    // ...
+    localStorage.setItem("jwt1", evt.data);
+    window.location.replace("/game");
   }
+
+  // setTimeout(() => {
+  //   var iframeEl = document.querySelector('iframe')
+  //   // Send a message to the child iframe
+  //   var sendMessage = function (msg) {
+  //     // Make sure you are sending a string, and to stringify JSON
+  //     iframeEl.contentWindow.postMessage(msg, '*');
+  //   };
+  //   sendMessage(JSON.stringify({ 'MerchantId': "This is first Merchant" }))
+  // }, 100);
+
+  var iframeEl = document.querySelector('iframe')
+
+  iframeEl.onload = function () {
+    // console.log(this);
+    var sendMessage = function (msg) {
+      // Make sure you are sending a string, and to stringify JSON
+      iframeEl.contentWindow.postMessage(msg, '*');
+    };
+    sendMessage(JSON.stringify({ 'merchantID': "0001" }))
+  }
+
+  // ...
+
 </script>
 
 </html>

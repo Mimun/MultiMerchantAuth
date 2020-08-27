@@ -38,12 +38,30 @@
     </div>
     <!-- partial -->
     <script>
+        // Get Merchant ID from Parent
+        var merchantId
+
+
+        // if not merchantID -> Request sent from GameAuthenticationModule then using default merchantID of GAM
+        // must be update here
+        if (window.self === window.top) {
+            merchantID = "0000"
+        } else {
+            // in an iframe (or other frames), act accordingly
+            // Listen to messages from parent window
+            bindEvent(window, 'message', function (e) {
+                console.info(e.data)
+                merchantID = JSON.parse(e.data).merchantID
+            });
+        }
+
         loginBnt = document.getElementById('loginBnt')
         loginBnt.addEventListener('click', (evt) => {
             console.log(evt)
             sendObj = {
                 username: document.getElementById('username').value,
-                password: document.getElementById('password').value
+                password: document.getElementById('password').value,
+                merchantID: merchantID
             }
 
             doAjax({
@@ -52,7 +70,14 @@
                 , payload: JSON.stringify(sendObj)
                 , handler: function (response) {
                     console.log(response)
+                    // Store JWT 1 to Storage then change windows.location to portal
+                    // console.log(typeof(response)). Must be improved here for security concert
+                    localStorage.setItem("jwt1", response);                   
+
                     window.parent.postMessage(response, "*")
+
+                    window.location.replace("/portal");
+
                 }
             })
 
@@ -64,7 +89,12 @@
             ajax.setRequestHeader("Content-type", request.contentType)
             ajax.onreadystatechange = function () {
                 if (ajax.readyState == 4) {
-                    request.handler.call(request, ajax.responseText)
+                    if(ajax.status === 200){
+                        request.handler.call(request, ajax.responseText)
+                    }else{
+                        console.log('Error', ajax.statusText)
+                    }
+                    
                 }
             }
             ajax.send(request.payload)
@@ -81,10 +111,21 @@
 
         //     // ...
         // }
-    // document.getElementById('login').submit(function(evt){
-    //   evt.preventDefault()
-    //   alert("Submit")
-    // })
+        // document.getElementById('login').submit(function(evt){
+        //   evt.preventDefault()
+        //   alert("Submit")
+        // })
+
+        // addEventListener support for IE8
+        function bindEvent(element, eventName, eventHandler) {
+            if (element.addEventListener) {
+                element.addEventListener(eventName, eventHandler, false);
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + eventName, eventHandler);
+            }
+        }
+
+
     </script>
     <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script> -->
     <!-- <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js'></script> -->

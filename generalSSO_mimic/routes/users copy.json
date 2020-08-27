@@ -1,0 +1,83 @@
+// [
+//     {
+//         "username": "chipl",
+//         "password": "123456",
+//         "role": "super-admin"
+//     },
+//     {
+//         "username": "john",
+//         "password": "password123admin",
+//         "role": "admin"
+//     },
+//     {
+//         "username": "anna",
+//         "password": "password123member",
+//         "role": "member"
+//     },
+//     {
+//         "avatar": "/images/meomeo.png",
+//         "lastname": "Phan",
+//         "firstname": "Anh",
+//         "email": "hoanganh17b@gmail.com",
+//         "phone": "0983230506",
+//         "username": "meomeo",
+//         "role": "super-admin",
+//         "balance": "123456",
+//         "password": "conheo"
+//     },
+//     {
+//         "avatar": "/images/Ngan.png",
+//         "lastname": "Tran",
+//         "firstname": "Ngan",
+//         "email": "tranngan@meomeo.com",
+//         "username": "Ngan",
+//         "role": "admin",
+//         "balance": "123",
+//         "password": "123",
+//         "phone": "123"
+//     },
+//     {
+//         "avatar": "/images/heocon.png",
+//         "lastname": "Heo",
+//         "firstname": "con",
+//         "email": "heocon@gmail.com",
+//         "username": "heocon",
+//         "role": "admin",
+//         "balance": "1234567",
+//         "password": "1234567",
+//         "phone": "1234567"
+//     },
+//     {
+//         "avatar": "/images/An.png",
+//         "lastname": "Tran",
+//         "firstname": "An An",
+//         "email": "anan@gmail.com",
+//         "username": "An",
+//         "role": "admin",
+//         "balance": "12599875",
+//         "password": "12599875",
+//         "phone": "12599875"
+//     },
+//     {
+//         "avatar": "/images/thinh.png",
+//         "lastname": "thinh",
+//         "firstname": "con",
+//         "email": "thinh@gmail.com",
+//         "username": "thinh",
+//         "role": "admin",
+//         "balance": "123456791",
+//         "password": "123456791",
+//         "phone": "123456791"
+//     },
+//     {
+//         "avatar": "/images/undefined.png"
+//     },
+//     {
+//         "avatar": "/images/undefined.png"
+//     },
+//     {
+//         "avatar": "/images/undefined.png"
+//     }
+// ]
+// 
+[]

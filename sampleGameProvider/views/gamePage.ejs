@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="/mdbootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/mdb.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>This is GamePage in sampleGameProvider</h1>
+
+
+
+    <script src="/mdbootstrap/js/jquery.min.js"></script>
+    <script src="/mdbootstrap/js/popper.min.js"></script>
+    <script src="/mdbootstrap/js/bootstrap.min.js"></script>
+    <script src="/mdbootstrap/js/mdb.min.js"></script>
+    <script>
+
+        if (window.self == window.top) {
+            // get JWT1 from storage
+            const JWT1 = localStorage.getItem("jwt1")
+            console.log('JWT1', JWT1)
+            // send ajax to gameAuthenticationModule to get user information ?? may not need
+
+        } else {
+            window.addEventListener("message", receiveMessage, false);
+            function receiveMessage(evt) {
+                console.log("JWT from iFrame: ", evt.data)
+                // if (event.origin !== "localhost:3001") {
+                //     return;
+                // }
+                // 1. get aliasJWT1 from parent windows
+                let aliasJWT = JSON.parse(evt.data)['accessToken']
+                console.log(aliasJWT)
+                // 2. sen back aliasJWT1 to sampleGameProvider to exchange real JWT1 and userInformation
+                sendObj = {
+                    aliasJWT: aliasJWT
+                }
+                console.log('alias', aliasJWT)
+                doAjax({
+                    url: '/aliasjwt'
+                    , contentType: "application/json"
+                    , payload: JSON.stringify(sendObj)
+                    , handler: function (response) {
+                        console.log(response)
+                    }
+                })
+            }
+        }
+
+
+
+        function doAjax(request) {
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", request.url, false)
+            ajax.setRequestHeader("Content-type", request.contentType)
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState == 4) {
+                    if (ajax.status === 200) {
+                        request.handler.call(request, ajax.responseText)
+                    } else {
+                        console.log('Error', ajax.statusText)
+                    }
+
+                }
+            }
+            ajax.send(request.payload)
+        }
+
+    </script>
+</body>
+
+</html>

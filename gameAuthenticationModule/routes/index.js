@@ -10,15 +10,13 @@ const fs = require('fs')
 
 const request = require('request');
 const { response } = require('express');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 
 
 const algorithm = 'aes-192-cbc';
 const ENC_KEY = Buffer.from("bf3c199c2470cb477d907b1e0917c17bbf3c199c2470cb477d907b1e0917c17b", "hex"); // set random encryption key
 const IV = Buffer.from("5183666c72eec9e45183666c72eec9e4", "hex"); // set random initialisation vector
 // ENC_KEY and IV can be generated as crypto.randomBytes(32).toString('hex');
-
-
 
 var encrypt = ((val) => {
   let cipher = crypto.createCipheriv('aes-256-cbc', ENC_KEY, IV);
@@ -53,10 +51,51 @@ router.post('/verify', function (req, res, next) {
 });
 
 
-router.get('/login',function(req,res,next){
+router.get('/login', function (req, res, next) {
   res.render('dynamic', { title: 'Express' });
   // res.render('index', { title: 'Express' });
 })
+
+router.post('/aliasjwt', (req, res, next) => {
+
+
+  encryptedAlias = req.body['aliasjwt']
+  console.log('from aliasjwt 3001--------', encryptedAlias)
+
+  // 1. Decrypt encryptedAlias with appropriated Sender PublicKey - will be implemented later from August 27 2020
+  alias = encryptedAlias;
+
+  // 3. Decrypte alias to be accessToken by AES key
+  accessToken = decrypt(alias)
+  // accessToken = alias
+
+  // 2. Send alias to SSO to get user information
+  const options = {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'User-Agent': 'my-reddit-client'
+    },
+    // form or body are ukie for both
+    body: { "accessToken": accessToken },
+    json: true
+
+  };
+  request('https://localhost:3000/verify', options, (err, resp, body) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('body', body)
+    res.send(body)
+  })
+  // res.send("from AuthenticationModule: \n" + encryptedAlias)
+})
+
+// router.post('/alias', (req,res,next)=>{
+//   console.log(req.body)
+//   res.send(ok)
+// })
 
 router.post('/login', function (req, res, next) {
   // Require Return JWT1
@@ -101,7 +140,7 @@ router.post('/login', function (req, res, next) {
 
     if (!JWT_0) {
       console.log('Invalid username and password')
-      res.send('Invalid username and password')
+      res.sendStatus(403)
       return;
     }
     // 3. Encrypt JWT-0 by AES System Key 
@@ -127,6 +166,23 @@ router.post('/login', function (req, res, next) {
   })
 
 })
+router.post('/eejwt0', (req, res, next) => {
+  let jwt1 = req.body['JWT1'];
+  // console.log('from eejwt0-------------',req.body )
+  if (!jwt1){
+    res.sendStatus(404)
+    return;
+  }
+  // console.log('from eejwt0', jwt1)
+  // Decprypt jwt1 to eejwto and send back
+  var path_to_PrivateKey = './GamePublicKeys/GamePriv_1.pem'
+
+  eejwt0 = RSA_PrivateKey_Decrypt(jwt1, path_to_PrivateKey)
+  // console.log('from eejwt0 -----------2 ', JSON.stringify(eejwt0))
+  accessToken = JSON.parse(eejwt0)
+  res.send(accessToken)
+})
+
 
 router.post('/verify_eejwt0', function (req, res, next) {
   console.log("req", req.body)
@@ -158,24 +214,11 @@ router.post('/verify_eejwt0', function (req, res, next) {
     res.send(body)
     console.log('return body', body)
   })
-  // Reading JWT_0
 
-
-  // let jwt = parseJwt(JWT_0)
-
-
-  // res.send(jwt)
-  // const accessTokenSecret = 'somerandomaccesstoken';
-  // const jwt = require('jsonwebtoken');
-
-  // jwt.verify(JWT_0, accessTokenSecret, (err, user) => {
-  //   if (err) {
-  //     return res.status(403).send(err);
-  //   }
-  //   return res.status(200).send('Confirm verification')
-  // })
 
 })
+
+
 
 // Helper functions
 
@@ -186,6 +229,22 @@ function RSA_PublicKey_Encrypt(toEncrypt, relativeOrAbsolutePathToPublicKey) {
   const encrypted = crypto.publicEncrypt(publicKey, buffer)
   return encrypted.toString('base64')
 }
+
+function RSA_PrivateKey_Decrypt(toDecrypt, relativeOrAbsolutePathtoPrivateKey) {
+  const absolutePath = path.resolve(relativeOrAbsolutePathtoPrivateKey)
+  const privateKey = fs.readFileSync(absolutePath, 'utf8')
+  const buffer = Buffer.from(toDecrypt, 'base64')
+  const decrypted = crypto.privateDecrypt(
+    {
+      key: privateKey.toString(),
+      passphrase: 'this is some secret of system',
+    },
+    buffer,
+  )
+  return decrypted.toString('utf8')
+}
+
+
 
 function parseJwt(token) {
   var base64Url = token.split('.')[1];

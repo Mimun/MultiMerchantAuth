@@ -28,6 +28,46 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/game', (req, res, next) => {
+  res.render('gamePage', { title: 'GamePage' });
+})
+
+router.post('/aliasjwt', (req, res, next) => {
+  let alias = req.body['aliasJWT'];
+  console.log('-------------------AliasJWT from 3002 ', alias)
+  // 1. Encrypt alias with privateKey - implement later since August 27 2020
+  // let path_to_Priv = "./bin/GamePriv_1.pem"
+  encryptedAlias = alias;
+  // 2. Build JSON with encrypted alias and mercha,ntID
+  sendObj = {
+    encryptedAlias: encryptedAlias,
+    merchantID: "0001"
+  }
+  // 3. Send back to SSO to get user Information
+  const options = {
+    url: 'https://localhost:3001/aliasjwt',
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'User-Agent': 'from 3002 sample game provider'
+    },
+    // form or body are ukie for both
+    body: { "aliasjwt": alias },
+    json: true
+
+  };
+  request('http://localhost:3001/aliasjwt', options, (err, resp, body) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('body', body)
+    res.send(body)
+  })
+
+  // res.send("Iam  not here " + JSON.stringify(req.body))
+})
+
 router.post('/verify_jwt1', function (req, res, next) {
   // 1. Decrypt JWT_1 to be EE_JWT_0
   const body = req.body;
