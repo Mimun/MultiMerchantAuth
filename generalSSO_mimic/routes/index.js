@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+global.atob = require("atob");
+
 const url = require('url')
 const querystring = require('querystring')
 const fs = require('fs')
@@ -126,7 +128,8 @@ router.post('/verify', (req, res, next) => {
         if (err) {
             return res.status(403).send(err);
         }
-        return res.status(200).send('Confirm verification')
+        let returnVal = getUserInfo(token)
+        return res.status(200).send(returnVal)
     })
 
 })
@@ -137,7 +140,29 @@ router.post('/logout', (req, res) => {
     res.send("Logout successful");
 });
 
+function getUserInfo(accessToken){
+    //1. Reading Tokien
+    tokenValue = parseJwt(accessToken)
+    const username = tokenValue.username
 
+    let rawdata = fs.readFileSync(data_path)
+    let users = JSON.parse(rawdata)
+    const user = users.find(u => { return u.username === username });
+    delete user.password
+
+    return user
+
+}
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+};
 
 
 module.exports = router;

@@ -13,7 +13,52 @@
 
 <body>
     <h1>This is GamePage in sampleGameProvider</h1>
+    <gameUser>
+        <div class="list-group-item object-div" style="border: none; " data-status="approved">
+            <div class="container">
+                <div class="row">
+                    <div class="col-3" style="margin: auto">
+                        <div class="image-container"
+                            style="width: 193px; max-width: 256px; height: auto; max-height: 192px;">
+                            <img alt="" style="width: 100%; height: auto;" comp-role="avatar"
+                                src="https://rawgit.com/PhanHoangAnh/CreateDynamicAttributeSets/master/materials/sample.jpg">
 
+                        </div>
+                    </div>
+                    <div class="col" style="margin: auto;">
+                        <p class="h4 mb-4 contract-title"><span comp-role="lastname">Adam Smith</span>&nbsp;<span
+                                comp-role="firstname"></span></p>
+
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Nickname:</th>
+                                    <td comp-role="username">Mark</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Balance:</th>
+                                    <td comp-role="balance">$ 2354254</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Phone:</th>
+                                    <td comp-role="phone">965823541</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Role:</th>
+                                    <td comp-role="role">Admin</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-2 btn-options" style="margin: auto;">
+                        <button class="btn btn-default btn-sm waves-effect waves-light" comp-id="btn-edit">Edit</button>
+                        <!-- <button class="btn btn-secondary btn-sm" id="btn-complete">Complete</button> -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </gameUser>
 
 
     <script src="/mdbootstrap/js/jquery.min.js"></script>
@@ -48,13 +93,14 @@
                     , contentType: "application/json"
                     , payload: JSON.stringify(sendObj)
                     , handler: function (response) {
+                        updateUserInfo(JSON.parse(response))
+
                         console.log(response)
+                        // Update UserInfor here
                     }
                 })
             }
         }
-
-
 
         function doAjax(request) {
             var ajax = new XMLHttpRequest();
@@ -71,6 +117,22 @@
                 }
             }
             ajax.send(request.payload)
+        }
+
+        function updateUserInfo(userInfo) {
+            user = document.querySelector('gameUser')
+            for (const [key, value] of Object.entries(userInfo)) {
+                if (user.querySelector(`[comp-role="${key}"]`) && key !== "avatar") {
+                    user.querySelector(`[comp-role="${key}"]`).innerHTML = value;
+                    // console.log(tempContent.querySelector(`[comp-role="${key}"]`))
+
+                }
+                if (key == 'avatar') {
+                    user.querySelector(`[comp-role="avatar"]`).src = "https://localhost:3000"+value
+                    // console.log(tempContent.querySelector(`[comp-role="avatar"]`))
+                }
+            }
+
         }
 
     </script>

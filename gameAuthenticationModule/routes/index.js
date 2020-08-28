@@ -11,6 +11,7 @@ const fs = require('fs')
 const request = require('request');
 const { response } = require('express');
 
+const wallet = require("./wallet");
 
 
 const algorithm = 'aes-192-cbc';
@@ -87,6 +88,7 @@ router.post('/aliasjwt', (req, res, next) => {
       return console.log(err);
     }
     console.log('body', body)
+    // Adding information of custom wallet here
     res.send(body)
   })
   // res.send("from AuthenticationModule: \n" + encryptedAlias)
