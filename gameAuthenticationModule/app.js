@@ -21,8 +21,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
 
-
-app.use('/', indexRouter);
+app.disable('etag');
+app.use('/',(req,res, next) =>{
+  next();
+}, indexRouter);
 app.use('/users', usersRouter);
 app.use('/portal', gamePortal)
 

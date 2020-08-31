@@ -34,6 +34,7 @@ var decrypt = ((encrypted) => {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+  console.log('From first router')
   res.render('index', { title: 'Authentication Module' });
 });
 
@@ -89,6 +90,20 @@ router.post('/aliasjwt', (req, res, next) => {
     }
     console.log('body', body)
     // Adding information of custom wallet here
+    let accoutNumber = body.userId;
+    console.log('account Number', accoutNumber)
+    let account = wallet.checkAccount(accoutNumber)
+    console.log('check Account', account );
+    if(!account){
+      wallet.createAccount(accoutNumber)
+    }
+    // Adding in firstime seting
+    // wallet.updateWallet(0, accoutNumber, 10000)
+
+    let tokenBalance  = wallet.getAmount(accoutNumber)
+    console.log('tokenBalance: ', tokenBalance)
+    body.token = tokenBalance
+    // 
     res.send(body)
   })
   // res.send("from AuthenticationModule: \n" + encryptedAlias)
