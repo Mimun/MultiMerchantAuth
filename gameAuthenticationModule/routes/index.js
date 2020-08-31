@@ -60,17 +60,13 @@ router.get('/login', function (req, res, next) {
 
 router.post('/aliasjwt', (req, res, next) => {
 
-
   encryptedAlias = req.body['aliasjwt']
   console.log('from aliasjwt 3001--------', encryptedAlias)
-
   // 1. Decrypt encryptedAlias with appropriated Sender PublicKey - will be implemented later from August 27 2020
   alias = encryptedAlias;
-
   // 3. Decrypte alias to be accessToken by AES key
   accessToken = decrypt(alias)
   // accessToken = alias
-
   // 2. Send alias to SSO to get user information
   const options = {
     method: 'POST',
@@ -102,17 +98,31 @@ router.post('/aliasjwt', (req, res, next) => {
 
     let tokenBalance  = wallet.getAmount(accoutNumber)
     console.log('tokenBalance: ', tokenBalance)
-    body.token = tokenBalance
+    body.token = tokenBalance;
+    
+    // wallet.updateWallet
     // 
     res.send(body)
   })
   // res.send("from AuthenticationModule: \n" + encryptedAlias)
-})
+});
 
-// router.post('/alias', (req,res,next)=>{
-//   console.log(req.body)
-//   res.send(ok)
-// })
+router.post('/updatetoken', (req,res,next)=>{
+  console.log(req.body)
+  // 1. reverify alias and userId
+  // 2. update wallet 
+  sourceAddress = req.body.sourceAddress;
+  destAddress = req.body.destAddress;
+  value = req.body.value;
+  console.log(req.body.sourceAddress)
+  console.log(req.body.destAddress)
+  console.log(req.body.value);
+  wallet.updateWallet(sourceAddress,destAddress,value);
+  let tokenBalance  = wallet.getAmount(sourceAddress)
+
+  // 3. get last ammount of user wallet then send back
+  res.send({'tokenBalance': tokenBalance})
+})
 
 router.post('/login', function (req, res, next) {
   // Require Return JWT1
@@ -231,9 +241,7 @@ router.post('/verify_eejwt0', function (req, res, next) {
     res.send(body)
     console.log('return body', body)
   })
-
-
-})
+});
 
 
 

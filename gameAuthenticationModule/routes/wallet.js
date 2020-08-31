@@ -42,8 +42,15 @@ wallet.updateWallet = (sourceAddress, destAddress, amount) => {
     tran.sourceAddress = sourceAddress
     tran.destAddress = destAddress
     tran.amount = amount
+// Need to check wallet account, will be update later at this section
+// Update Wallet info
+
     let sourceAccount = accounts.find(a => { if (a.address == sourceAddress) { return a } })
-    let destAccount = accounts.find(a => { if (a.address == sourceAddress) { return a } })
+    let destAccount = accounts.find(a => { if (a.address == destAddress) { return a } })
+
+    console.log('source address:', sourceAccount)
+    console.log('destAddress', destAccount)
+
     if (sourceAccount && destAccount) {
         sourceAccount.book.push(Object.assign({}, tran))
         destAccount.book.push(Object.assign({}, tran))
@@ -65,12 +72,9 @@ wallet.updateWallet = (sourceAddress, destAddress, amount) => {
 
 wallet.getAmount = (address) => {
     let account = accounts.find(a => {
-
         if (a.address == address) {
-            a.address == address;
             return a
         }
-
     })
 
     // console.log("from wallet get Ammount: ",address, account)

@@ -57,7 +57,7 @@ This is Game Portal in GameAuthenticationModule
         , contentType: "application/json"
         , payload: JSON.stringify(sendObj)
         , handler: function (response) {
-            accessToken = JSON.parse(response)['accessToken']
+            var accessToken = JSON.parse(response)['accessToken']
             console.log(accessToken)
 
             var iframeEl = document.querySelector('iframe')

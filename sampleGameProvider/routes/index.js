@@ -68,6 +68,35 @@ router.post('/aliasjwt', (req, res, next) => {
   // res.send("Iam  not here " + JSON.stringify(req.body))
 })
 
+router.post('/updateToken', (req,res,next)=>{
+  console.log(req.body);
+    // 3. Send back to SSO to get user Information
+    const options = {
+      url: 'https://localhost:3001/updatetoken',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Accept-Charset': 'utf-8',
+        'User-Agent': 'from 3002 sample game provider'
+      },
+      // form or body are ukie for both
+      body: req.body,
+      json: true
+  
+    };
+    request('http://localhost:3001/updatetoken', options, (err, resp, body) => {
+      if (err) {
+        return console.log(err);
+      }
+      console.log('body', body)
+      res.send(body)
+    })
+  // res.send("I am fine");
+})
+
+
+
+
 router.post('/verify_jwt1', function (req, res, next) {
   // 1. Decrypt JWT_1 to be EE_JWT_0
   const body = req.body;
