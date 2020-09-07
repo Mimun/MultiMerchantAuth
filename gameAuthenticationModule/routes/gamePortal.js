@@ -21,6 +21,11 @@ router.get('/', checkAuthentication, (req,res,next)=>{
     res.render("GamePortal/gamePortal")
 })
 
+
+
+router.get('/real', checkAuthentication, (req,res,next)=>{
+    res.render("GamePortal/realgamePortal")
+})
 // Checking only
 router.get('/changeJWT', (req,res,next)=>{
     res.sendStatus(200).send("Good")

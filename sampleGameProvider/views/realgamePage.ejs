@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="/mdbootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/mdb.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>This is GamePage in sampleGameProvider</h1>
+
+    <%- include('gamePartial')%>
+
+    <script src="/mdbootstrap/js/jquery.min.js"></script>
+    <script src="/mdbootstrap/js/popper.min.js"></script>
+    <script src="/mdbootstrap/js/bootstrap.min.js"></script>
+    <script src="/mdbootstrap/js/mdb.min.js"></script>
+    <script>
+
+        var aliasJWT, userId;
+
+        if (window.self == window.top) {
+            // get JWT1 from storage
+            const JWT1 = localStorage.getItem("jwt1")
+            console.log('JWT1', JWT1)
+            // send ajax to gameAuthenticationModule to get user information ?? may not need
+
+        } else {
+            window.addEventListener("message", receiveMessage, false);
+            function receiveMessage(evt) {
+                console.log("JWT from iFrame: ", evt.data)
+                // if (event.origin !== "localhost:3001") {
+                //     return;
+                // }
+                // 1. get aliasJWT1 from parent windows
+                aliasJWT = this.aliasJWT = JSON.parse(evt.data)['accessToken']
+                console.log(aliasJWT)
+                // 2. sen back aliasJWT1 to sampleGameProvider to exchange real JWT1 and userInformation
+                sendObj = {
+                    aliasJWT: aliasJWT
+                }
+                // End poit at post localhost:3002//alias
+                console.log('alias', aliasJWT)
+                doAjax({
+                    url: '/aliasjwt'
+                    , contentType: "application/json"
+                    , payload: JSON.stringify(sendObj)
+                    , handler: function (response) {
+                        updateUserInfo(JSON.parse(response))
+                        userId = JSON.parse(response)["userId"]
+                    }
+                })
+            }
+        }
+
+        function doAjax(request) {
+            var ajax = new XMLHttpRequest();
+            ajax.open("POST", request.url, false)
+            ajax.setRequestHeader("Content-type", request.contentType)
+            ajax.onreadystatechange = function () {
+                if (ajax.readyState == 4) {
+                    if (ajax.status === 200) {
+                        request.handler.call(request, ajax.responseText)
+                    } else {
+                        console.log('Error', ajax.statusText)
+                    }
+
+                }
+            }
+            ajax.send(request.payload)
+        }
+
+        function updateUserInfo(userInfo) {
+            user = document.querySelector('gameUser')
+            for (const [key, value] of Object.entries(userInfo)) {
+                if (user.querySelector(`[comp-role="${key}"]`) && key !== "avatar") {
+                    user.querySelector(`[comp-role="${key}"]`).innerHTML = value;
+                    // console.log(tempContent.querySelector(`[comp-role="${key}"]`))
+
+                }
+                if (key == 'avatar') {
+                    user.querySelector(`[comp-role="avatar"]`).src = "https://localhost:3000" + value
+                    // console.log(tempContent.querySelector(`[comp-role="avatar"]`))
+                }
+            }
+
+        }
+
+        function updateBalance() {
+            console.log(aliasJWT)
+        }
+        var editBnt = document.querySelector('[comp-id="btn-edit"]')
+        // console.log(editBnt)
+        editBnt.addEventListener('click', evt => {
+            console.log('aliasJWT', aliasJWT, userId)
+
+
+            sendObj = {
+                aliasJWT: aliasJWT,
+                sourceAddress: userId,
+                destAddress: 0,
+                value: 100
+            }
+            // End poit at post localhost:3002//alias
+            console.log('sendObj', sendObj)
+            doAjax({
+                url: '/updateToken'
+                , contentType: "application/json"
+                , payload: JSON.stringify(sendObj)
+                , handler: function (response) {
+                    console.log(response)
+                    // 
+                    console.log(JSON.parse(response)["tokenBalance"])
+                    // Update UserInfor here
+                    tokenElem = document.querySelector('[comp-role="token"]')
+                    tokenElem.innerHTML = `${JSON.parse(response)["tokenBalance"]} $$ Token`
+                }
+            })
+        })
+
+    </script>
+</body>
+
+</html>

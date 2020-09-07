@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="/mdbootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/mdb.min.css" rel="stylesheet">
+    <link href="/mdbootstrap/css/style.css" rel="style">
+
+</head>
+
+<body>
+    <%- include('navbar')%>
+    <h2>Game Content Bellow</h2>
+    <hr>
+    <iframe src="http://localhost:3002/realgame.html" style="
+    width: 100%;
+    height: 800px;
+    border: gray solid;"></iframe>
+</body>
+
+This is Game Portal in GameAuthenticationModule
+
+<script src="/mdbootstrap/js/jquery.min.js"></script>
+<script src="/mdbootstrap/js/popper.min.js"></script>
+<script src="/mdbootstrap/js/bootstrap.min.js"></script>
+<script src="/mdbootstrap/js/mdb.min.js"></script>
+<script>
+    // 1. getJWT1
+    const JWT1 = localStorage.getItem("jwt1")
+    // 1. sendback to gameAuthenticationModule to decrypt and get EEJWT_0
+
+
+    console.log('JWT1', JWT1)
+    // 2. send JWT1 to iFrame
+    function doAjax(request) {
+        var ajax = new XMLHttpRequest();
+        ajax.open("POST", request.url, false)
+        ajax.setRequestHeader("Content-type", request.contentType)
+        ajax.onreadystatechange = function () {
+            if (ajax.readyState == 4) {
+                request.handler.call(request, ajax.responseText)
+            }
+        }
+        ajax.send(request.payload)
+    }
+
+    sendObj = {
+        JWT1: JWT1
+    }
+
+    doAjax({
+        url: '/eejwt0'
+        , contentType: "application/json"
+        , payload: JSON.stringify(sendObj)
+        , handler: function (response) {
+            var accessToken = JSON.parse(response)['accessToken']
+            console.log(accessToken)
+
+            var iframeEl = document.querySelector('iframe')
+            iframeEl.onload = function () {
+                // console.log(this);
+                var sendMessage = function (msg) {
+                    // Make sure you are sending a string, and to stringify JSON
+                    iframeEl.contentWindow.postMessage(msg, '*');
+                };
+                sendMessage(JSON.stringify({
+                    'merchantID': "0000",
+                    'accessToken': accessToken
+                }))
+
+                //         
+            }
+
+        }
+    })
+
+
+</script>
+</body>
+
+</html>
