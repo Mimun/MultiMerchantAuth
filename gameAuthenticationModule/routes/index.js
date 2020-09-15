@@ -3,6 +3,10 @@ var router = express.Router();
 global.atob = require("atob");
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+// SSO Address
+
+var sso_base_url = (process.env.SS0_HTTPS_ADDRESS||'https://localhost:3000')
+
 
 const crypto = require('crypto')
 const path = require('path')
@@ -80,7 +84,7 @@ router.post('/aliasjwt', (req, res, next) => {
     json: true
 
   };
-  request('https://localhost:3000/verify', options, (err, resp, body) => {
+  request(`${sso_base_url}/verify`, options, (err, resp, body) => {
     if (err) {
       return console.log(err);
     }
@@ -130,7 +134,7 @@ router.post('/login', function (req, res, next) {
   const { username, password, merchantID } = req.body
   // 2. Forward username/password to SSO to get JWT-0
   const options = {
-    url: 'https://localhost:3000/login',
+    url: `${sso_base_url}/login`,
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -148,7 +152,7 @@ router.post('/login', function (req, res, next) {
 
   // const jwt = require('jsonwebtoken');
 
-  request('https://localhost:3000/login', options, (err, resp, body) => {
+  request(`${sso_base_url}/login`, options, (err, resp, body) => {
     if (err) {
       return console.log(err);
     }
@@ -219,7 +223,7 @@ router.post('/verify_eejwt0', function (req, res, next) {
   let JWT_0 = decrypt(eejwt0)
 
   const options = {
-    url: 'https://localhost:3000/verify',
+    url: `{sso_base_url}/verify`,
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -233,7 +237,7 @@ router.post('/verify_eejwt0', function (req, res, next) {
     json: true
   };
 
-  request('https://localhost:3000/verify', options, (err, resp, body) => {
+  request(`${sso_base_url}/verify`, options, (err, resp, body) => {
     if (err) {
       return console.log(err);
       res.sendStatus(400)

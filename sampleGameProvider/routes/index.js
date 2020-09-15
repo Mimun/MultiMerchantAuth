@@ -5,6 +5,7 @@ const path = require('path')
 const fs = require('fs')
 var crypto = require("crypto");
 
+var AUTHEN_BASE_URL = (process.env.AUTHEN_BASE_URL||"http://localhost:3001")
 
 // Helper function libs
 
@@ -25,6 +26,7 @@ function RSA_PrivateKey_Decrypt(toDecrypt, relativeOrAbsolutePathtoPrivateKey) {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+  console.log('from Index Endpoint "/"')
   res.render('index', { title: 'Express' });
 });
 
@@ -45,7 +47,7 @@ router.post('/aliasjwt', (req, res, next) => {
   }
   // 3. Send back to SSO to get user Information
   const options = {
-    url: 'https://localhost:3001/aliasjwt',
+    url: `${AUTHEN_BASE_URL}/aliasjwt`,
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -57,7 +59,7 @@ router.post('/aliasjwt', (req, res, next) => {
     json: true
 
   };
-  request('http://localhost:3001/aliasjwt', options, (err, resp, body) => {
+  request(`${AUTHEN_BASE_URL}/aliasjwt`, options, (err, resp, body) => {
     if (err) {
       return console.log(err);
     }
@@ -72,7 +74,7 @@ router.post('/updateToken', (req,res,next)=>{
   console.log(req.body);
     // 3. Send back to SSO to get user Information
     const options = {
-      url: 'https://localhost:3001/updatetoken',
+      url: `${AUTHEN_BASE_URL}/updatetoken`,
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -84,7 +86,7 @@ router.post('/updateToken', (req,res,next)=>{
       json: true
   
     };
-    request('http://localhost:3001/updatetoken', options, (err, resp, body) => {
+    request(`${AUTHEN_BASE_URL}/updatetoken`, options, (err, resp, body) => {
       if (err) {
         return console.log(err);
       }
@@ -121,7 +123,7 @@ router.post('/verify_jwt1', function (req, res, next) {
   console.log('EE_JWT_0', EE_JWT0)
 
   const options = {
-    url: 'https://localhost:3001/verify_eejwt0',
+    url: `${AUTHEN_BASE_URL}/verify_eejwt0`,
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -133,7 +135,7 @@ router.post('/verify_jwt1', function (req, res, next) {
     json: true
 
   };
-  request('http://localhost:3001/verify_eejwt0', options, (err, resp, body) => {
+  request(`${AUTHEN_BASE_URL}/verify_eejwt0`, options, (err, resp, body) => {
     if (err) {
       return console.log(err);
     }

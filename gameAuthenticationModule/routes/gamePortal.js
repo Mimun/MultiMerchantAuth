@@ -3,6 +3,7 @@ var router = express.Router();
 global.atob = require("atob");
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+GAME_ADDRESS = (process.env.GAME_ADRESS||'http://localhost:3002/realgame.html')
 
 const crypto = require('crypto')
 const path = require('path')
@@ -18,7 +19,7 @@ function checkAuthentication(req,res,next){
 
 
 router.get('/', checkAuthentication, (req,res,next)=>{
-    res.render("GamePortal/gamePortal")
+    res.render("GamePortal/gamePortal", {GAME_ADDRESS: GAME_ADDRESS})
 })
 
 

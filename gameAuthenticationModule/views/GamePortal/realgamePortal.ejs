@@ -15,8 +15,9 @@
 <body>
     <%- include('navbar')%>
     <h2>Game Content Bellow</h2>
+    <%=GAME_ADDRESS%>
     <hr>
-    <iframe src="http://localhost:3002/realgame.html" style="
+    <iframe src=<%=GAME_ADDRESS%> style="
     width: 100%;
     height: 800px;
     border: gray solid;"></iframe>
