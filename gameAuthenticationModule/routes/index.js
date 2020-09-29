@@ -4,6 +4,7 @@ global.atob = require("atob");
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // SSO Address
+require('dotenv').config()
 
 var sso_base_url = (process.env.SS0_HTTPS_ADDRESS||'https://localhost:3000')
 
