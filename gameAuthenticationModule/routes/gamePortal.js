@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 global.atob = require("atob");
+
+require('dotenv').config()
+
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 GAME_ADDRESS = (process.env.GAME_ADRESS||'http://localhost:3002/realgame.html')
