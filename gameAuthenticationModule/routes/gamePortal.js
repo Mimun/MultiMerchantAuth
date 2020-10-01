@@ -7,8 +7,8 @@ require('dotenv').config()
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-GAME_ADDRES = (process.env.GAME_ADRESS||'http://localhost:3002/realgame.html')
-console.log('GameAddress', GAME_ADDRES)
+GAME_ADDRESS = (process.env.GAME_ADRESS||'http://localhost:3002/realgame.html')
+console.log('GameAddress', GAME_ADDRESS)
 
 
 const crypto = require('crypto')
@@ -25,7 +25,7 @@ function checkAuthentication(req,res,next){
 
 
 router.get('/', checkAuthentication, (req,res,next)=>{
-    res.render("GamePortal/gamePortal", {GAME_ADDRES: GAME_ADDRES})
+    res.render("GamePortal/gamePortal", {GAME_ADDRESS: GAME_ADRESS})
 })
 
 
