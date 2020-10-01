@@ -7,7 +7,8 @@ require('dotenv').config()
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-GAME_ADDRESS = (process.env.GAME_ADDRESS||'http://localhost:3002/realgame.html')
+// GAME_ADDRESS = (process.env.GAME_ADDRESS||'http://localhost:3002/realgame.html')
+GAME_ADDRESS = (process.env.GAME_ADDRESS||'http://localhost:3002')
 console.log('GameAddress', GAME_ADDRESS)
 
 
@@ -25,13 +26,13 @@ function checkAuthentication(req,res,next){
 
 
 router.get('/', checkAuthentication, (req,res,next)=>{
-    res.render("GamePortal/gamePortal", {GAME_ADDRESS: GAME_ADDRESS})
+    res.render("GamePortal/gamePortal", {GAME_ADDRESS: GAME_ADDRESS+"/game"})
 })
 
 
 
 router.get('/real', checkAuthentication, (req,res,next)=>{
-    res.render("GamePortal/realgamePortal",{GAME_ADDRESS: GAME_ADDRESS})
+    res.render("GamePortal/realgamePortal",{GAME_ADDRESS: GAME_ADDRESS+'/realgame.html'})
 })
 // Checking only
 router.get('/changeJWT', (req,res,next)=>{
