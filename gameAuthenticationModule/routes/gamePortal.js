@@ -7,7 +7,7 @@ require('dotenv').config()
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-GAME_ADDRESS = (process.env.GAME_ADRESS||'http://localhost:3002/realgame.html')
+GAME_ADDRESS = (process.env.GAME_ADDRESS||'http://localhost:3002/realgame.html')
 console.log('GameAddress', GAME_ADDRESS)
 
 
