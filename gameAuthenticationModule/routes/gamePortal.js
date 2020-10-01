@@ -31,7 +31,7 @@ router.get('/', checkAuthentication, (req,res,next)=>{
 
 
 router.get('/real', checkAuthentication, (req,res,next)=>{
-    res.render("GamePortal/realgamePortal")
+    res.render("GamePortal/realgamePortal",{GAME_ADDRESS: GAME_ADRESS})
 })
 // Checking only
 router.get('/changeJWT', (req,res,next)=>{
