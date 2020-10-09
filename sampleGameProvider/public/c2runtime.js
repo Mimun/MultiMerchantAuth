@@ -18288,7 +18288,7 @@ cr.plugins_.TimeIframePlugin = function(runtime)
 			}
 		}
 		console.log('From GetIncommingMsg:', key, document.userInfo[key])
-		if(document.userInfo && document.userInfo[key]){
+		if(document.userInfo){
 			ret.set_string(document.userInfo[key].toString())
 		}else{
 			ret.set_string("Hello");		// for ef_return_string
@@ -20692,9 +20692,9 @@ cr.behaviors.wrap = function(runtime)
 	};
 }());
 cr.getObjectRefTable = function () { return [
+	cr.plugins_.Particles,
 	cr.plugins_.TimeIframePlugin,
 	cr.plugins_.Mouse,
-	cr.plugins_.Particles,
 	cr.plugins_.TiledBg,
 	cr.plugins_.Touch,
 	cr.plugins_.Sprite,
