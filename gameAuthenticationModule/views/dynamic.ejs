@@ -42,7 +42,7 @@
         var merchantId
 
 
-        // if not merchantID -> Request sent from GameAuthenticationModule then using default merchantID of GAM
+        // if not merchantID -> Request sent from GameAuthenticationModule then using default merchantID of GAME
         // must be update here
         if (window.self === window.top) {
             merchantID = "0000"
@@ -57,7 +57,7 @@
 
         loginBnt = document.getElementById('loginBnt')
         loginBnt.addEventListener('click', (evt) => {
-            console.log(evt)
+            // console.log(evt)
             sendObj = {
                 username: document.getElementById('username').value,
                 password: document.getElementById('password').value,
@@ -111,10 +111,6 @@
 
         //     // ...
         // }
-        // document.getElementById('login').submit(function(evt){
-        //   evt.preventDefault()
-        //   alert("Submit")
-        // })
 
         // addEventListener support for IE8
         function bindEvent(element, eventName, eventHandler) {

@@ -16,14 +16,15 @@
     <%- include('navbar')%>
     <h2>Game Content Bellow</h2>
     <p>
-        <a href = "/portal/real">Go to Real Game</a>
+        <a href="/portal/real">Go to Real Game</a>
+        <!-- <a href="/portal/real">Go to Real Game</a> -->
     </p>
     <hr>
     <iframe src=<%=GAME_ADDRESS%> style="
     width: 100%;
     height: 800px;
     border: gray solid;"></iframe>
-    
+
 </body>
 
 This is Game Portal in GameAuthenticationModule
@@ -39,7 +40,6 @@ This is Game Portal in GameAuthenticationModule
 
 
     console.log('JWT1', JWT1)
-    // 2. send JWT1 to iFrame
     function doAjax(request) {
         var ajax = new XMLHttpRequest();
         ajax.open("POST", request.url, false)
@@ -51,7 +51,6 @@ This is Game Portal in GameAuthenticationModule
         }
         ajax.send(request.payload)
     }
-
     sendObj = {
         JWT1: JWT1
     }
@@ -71,14 +70,12 @@ This is Game Portal in GameAuthenticationModule
                     // Make sure you are sending a string, and to stringify JSON
                     iframeEl.contentWindow.postMessage(msg, '*');
                 };
+                    // 2. send JWT1 to iFrame
                 sendMessage(JSON.stringify({
                     'merchantID': "0000",
                     'accessToken': accessToken
                 }))
-
-                //         
             }
-
         }
     })
 

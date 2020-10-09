@@ -85,7 +85,7 @@ router.post('/pagelogin', (req, res) => {
         res.render('result', {
             token: JSON.stringify(accessToken),
             refresh: JSON.stringify(refreshToken),
-            user:user
+            user:JSON.stringify(user)
         });
     } else {
         res.send('Username or password incorrect');

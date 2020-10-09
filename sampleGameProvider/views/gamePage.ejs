@@ -23,6 +23,9 @@
     <script>
 
         var aliasJWT, userId;
+        
+        // require('dotenv').config()
+        // var SSO_BASE_URL = (process.env.SSO_BASE_URL || "https://localhost:3000")
 
         if (window.self == window.top) {
             // get JWT1 from storage
@@ -84,7 +87,10 @@
 
                 }
                 if (key == 'avatar') {
-                    user.querySelector(`[comp-role="avatar"]`).src = "https://localhost:3000" + value
+                    // SSO_BASE_URL
+                    // user.querySelector(`[comp-role="avatar"]`).src = "https://localhost:3000" + value
+                    
+                    user.querySelector(`[comp-role="avatar"]`).src = "<%- SSO_BASE_URL%>" + value
                     // console.log(tempContent.querySelector(`[comp-role="avatar"]`))
                 }
             }

@@ -4,8 +4,15 @@ const request = require('request')
 const path = require('path')
 const fs = require('fs')
 var crypto = require("crypto");
+require('dotenv').config()
 
-var AUTHEN_BASE_URL = (process.env.AUTHEN_BASE_URL||"http://localhost:3001")
+var SSO_BASE_URL = (process.env.SSO_BASE_URL|| "https://localhost:3000")
+
+var AUTHEN_BASE_URL = (process.env.AUTHEN_BASE_URL || "http://localhost:3001")
+
+// console.log('from index.js 3002:' , SSO_BASE_URL)
+
+
 
 // Helper function libs
 
@@ -31,7 +38,10 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/game', (req, res, next) => {
-  res.render('gamePage', { title: 'GamePage' });
+  res.render('gamePage', {
+    title: 'GamePage',
+    SSO_BASE_URL: SSO_BASE_URL
+  });
 })
 
 router.post('/aliasjwt', (req, res, next) => {
@@ -70,29 +80,29 @@ router.post('/aliasjwt', (req, res, next) => {
   // res.send("Iam  not here " + JSON.stringify(req.body))
 })
 
-router.post('/updateToken', (req,res,next)=>{
+router.post('/updateToken', (req, res, next) => {
   console.log(req.body);
-    // 3. Send back to SSO to get user Information
-    const options = {
-      url: `${AUTHEN_BASE_URL}/updatetoken`,
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Accept-Charset': 'utf-8',
-        'User-Agent': 'from 3002 sample game provider'
-      },
-      // form or body are ukie for both
-      body: req.body,
-      json: true
-  
-    };
-    request(`${AUTHEN_BASE_URL}/updatetoken`, options, (err, resp, body) => {
-      if (err) {
-        return console.log(err);
-      }
-      console.log('body', body)
-      res.send(body)
-    })
+  // 3. Send back to SSO to get user Information
+  const options = {
+    url: `${AUTHEN_BASE_URL}/updatetoken`,
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Charset': 'utf-8',
+      'User-Agent': 'from 3002 sample game provider'
+    },
+    // form or body are ukie for both
+    body: req.body,
+    json: true
+
+  };
+  request(`${AUTHEN_BASE_URL}/updatetoken`, options, (err, resp, body) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('body', body)
+    res.send(body)
+  })
   // res.send("I am fine");
 })
 
@@ -146,3 +156,5 @@ router.post('/verify_jwt1', function (req, res, next) {
 })
 
 module.exports = router;
+
+
